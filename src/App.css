@@ -5,3 +5,16 @@ body {
 .Slices-container {
   position:relative;
 }
+
+.CutBand {
+  position: absolute;
+  right: -30px;
+  width: 20px;
+
+  top:0; /* hug top and bottom */
+  bottom:0; /* hug top and bottom */
+  background: #ddd;
+}
+.CutBand:hover {
+  cursor:crosshair;
+}

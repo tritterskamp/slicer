@@ -3,6 +3,10 @@ import {setSliceValue} from './redux-actions/app-actions.js'
 
 class Slice extends React.Component {
 
+  componentDidMount() {
+    //Focus on my input when mounting
+    this.refs.yInput.focus();
+  }
 
   handleChange() {
     setSliceValue(this.props.id, {

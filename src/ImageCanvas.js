@@ -5,7 +5,8 @@ class ImageCanvas extends React.Component {
 
   handleImageLoaded() {
     setAppValue({
-      imageWidth: this.refs.img.clientWidth
+      imageWidth: this.refs.img.clientWidth,
+      imageHeight: this.refs.img.clientHeight,
     })
   }
 

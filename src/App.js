@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux'
 import './App.css';
 import ImageCanvas from './ImageCanvas'
 import Slices from './Slices'
-import {connect} from 'react-redux'
+import CutBand from './CutBand'
 
 class App extends Component {
 
   render() {
 
     const slicesContainerStyle = {
-      width: this.props.imageWidth
+      width: this.props.imageWidth,
+      height: this.props.imageHeight
     };
 
     return (
@@ -19,6 +21,7 @@ class App extends Component {
         </div>
 
         <div className="Slices-container" style={slicesContainerStyle}>
+          <CutBand />
           <Slices />
           <ImageCanvas src="/chopping-block/S1-Trend-Sandals.jpg" />
         </div>
@@ -30,6 +33,7 @@ class App extends Component {
 
 export default connect((state, props) => {
   return {
-    imageWidth: state.app.imageWidth
+    imageWidth: state.app.imageWidth,
+    imageHeight: state.app.imageHeight,
   }
 })(App)
