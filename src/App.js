@@ -4,6 +4,7 @@ import './App.css';
 import ImageCanvas from './ImageCanvas'
 import Slices from './Slices'
 import CutBand from './CutBand'
+import CutButton from './CutButton'
 
 class App extends Component {
 
@@ -18,12 +19,13 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <h2>Slice</h2>
+          <CutButton />
         </div>
 
         <div className="Slices-container" style={slicesContainerStyle}>
           <CutBand />
           <Slices />
-          <ImageCanvas src="/chopping-block/S1-Trend-Sandals.jpg" />
+          <ImageCanvas src={this.props.imageSrc} />
         </div>
 
       </div>
@@ -33,6 +35,7 @@ class App extends Component {
 
 export default connect((state, props) => {
   return {
+    imageSrc: state.app.imageSrc,
     imageWidth: state.app.imageWidth,
     imageHeight: state.app.imageHeight,
   }
