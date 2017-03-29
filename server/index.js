@@ -2,6 +2,7 @@
 
 const Hapi = require('hapi');
 const im = require('imagemagick');
+const easyimg = require('easyimage');
 
 function makeId(prefix, length) {
   prefix = prefix || "";
@@ -64,14 +65,17 @@ server.route({
         const sliceFileName = `${groupId}_${iteratorCount}.${features.format}`; //slice_asdas_0.jpg
         const outputPath = `public/output/${sliceFileName}`;
 
-        im.crop({
-          srcPath: prevCrop || originalImagePath, //start with the originalImagePath, then use the next one
-          dstPath: outputPath,
+        easyimg.rescrop({
+          src: originalImagePath, //start with the originalImagePath, then use the next one
+          dst: outputPath,
           width: features.width,
           height: array[0],
+          y: 100,
+
+
           quality: 1,
           gravity: "North"
-        }, function (err, stdout, stderr) {
+        }).then(function() {
 
           //recursive!
           if (array.length > 1) {
