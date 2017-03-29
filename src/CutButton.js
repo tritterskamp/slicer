@@ -12,10 +12,7 @@ class CutButton extends React.Component {
       body: JSON.stringify({
         srcImg: this.props.imageSrc,
         sliceYs: this.props.slices.map( s => {
-          return {
-            startY: 0,
-            stopY: s.y
-          }
+          return s.y
         })
       })
     });
