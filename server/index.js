@@ -9,7 +9,7 @@ function makeId(prefix, length) {
   length = length || 10;
 
   var text = "";
-  var possible = "0123456789abcdefghijklmnopqrstuvwxyz";
+  var possible = "0123456789";
 
   for (var i = 0; i < length; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -55,7 +55,7 @@ server.route({
       if (err) throw err;
       //features: { format: 'JPEG', width: 3904, height: 2622, depth: 8 }
 
-      const projId = makeId("slice", 5);
+      const projId = makeId("sliceTest", 12);
 
       let iteratorCount = 1;
       function cropSeries(array, finalCallback) {
@@ -64,7 +64,7 @@ server.route({
         const sliceModel = array[0];
 
         //Crop using first member of the array
-        const sliceFileName = `${projId}_${iteratorCount}.${features.format}`; //slice_asdas_0.jpg
+        const sliceFileName = `${projId}_proj${iteratorCount}.${features.format}`; //slice_asdas_0.jpg
         const outputPath = `public/output/${sliceFileName}`;
 
         easyimg.rescrop({
