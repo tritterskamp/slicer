@@ -1,5 +1,6 @@
 import React from 'react';
 import {setSliceValue} from './redux-actions/app-actions.js'
+import SliceTextboxes from './SliceTextboxes'
 
 class Slice extends React.Component {
 
@@ -15,10 +16,11 @@ class Slice extends React.Component {
   }
 
   render() {
+    const {model} = this.props;
     const style = {
       position: "absolute",
       left: 0,
-      top: this.props.y,
+      top: model.y,
       right: 0,
       height: 1,
       borderTop: "1px solid cyan"
@@ -37,9 +39,17 @@ class Slice extends React.Component {
             ref="yInput"
             style={{width:50}}
             type="number"
-            value={this.props.y}
+            value={model.y}
             onChange={this.handleChange.bind(this)}
           />
+
+          <SliceTextboxes
+            id={this.props.id}
+            hasLink={model.hasLink || false}
+            linkText={model.linkText || ""}
+            altText={model.altText || ""}
+          />
+
         </div>
       </div>
     )

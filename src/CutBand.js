@@ -12,6 +12,9 @@ class CutBand extends React.Component {
 
     //Create new slice
     setSliceValue( makeId("slice"), {
+      hasLink: true,
+      linkText: "",
+      altText: "",
       y: newSliceY
     })
 

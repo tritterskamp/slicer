@@ -26,7 +26,7 @@ class CutButton extends React.Component {
 
       //Sample response: [ {sliceId:"a", publishedUrl: "/a/s/asdasd.jpg"} ]
       //So we can map the new image back to the slice.
-      
+
     })
 
   }

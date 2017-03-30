@@ -18,3 +18,18 @@ body {
 .CutBand:hover {
   cursor:crosshair;
 }
+
+
+.SliceTextboxes-label {
+  font-size: 0.7em;
+  display:block;
+  margin-bottom: 0.3em;
+}
+.SliceTextboxes-label.inline {
+  display: inline-block;
+  margin-right:1em;
+}
+
+.SliceTextboxes-textinput {
+  width: 250px
+}

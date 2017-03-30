@@ -23,7 +23,9 @@ server.start((err) => {
 function salesForceMocker(data, callback) {
   callback({
     sliceId: data.sliceId,
-    publishedUrl: "/some/img"
+    sliceWidth: 500,
+    sliceHeight: 361,
+    publishedUrl: "http://image.email.caleres.com/lib/fe9f13727765057d76/m/2/df95628e-b4d8-4516-adc5-f459f2c42022.jpg"
   });
 }
 
