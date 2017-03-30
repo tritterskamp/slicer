@@ -17,7 +17,7 @@ class Slices extends React.Component {
     return (
       <div style={style}>
         {
-          this.props.slices.map((model, i) => <Slice key={i} id={model._id} y={model.y} />)
+          this.props.slices.map((model, i) => <Slice key={i} id={model._id} model={model} />)
         }
       </div>
     )
