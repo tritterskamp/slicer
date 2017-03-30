@@ -10,12 +10,27 @@ class SliceTextboxes extends React.Component {
     })
   }
 
+  handleLinkTextChange() {
+    setSliceValue(this.props.id, {
+      linkText: this.refs.linkTextInput.value
+    })
+  }
+
+  handleAltTextChange() {
+    setSliceValue(this.props.id, {
+      altText: this.refs.altTextInput.value
+    })
+  }
+
+
   renderLinkTextbox() {
     if (this.props.hasLink) {
       return (
         <div>
           <label className="SliceTextboxes-label">Link</label>
-          <input className="SliceTextboxes-textinput" />
+          <input ref="linkTextInput" value={this.props.linkText}
+                 onChange={this.handleLinkTextChange.bind(this)}
+                 className="SliceTextboxes-textinput"/>
         </div>
       )
     }
@@ -24,10 +39,10 @@ class SliceTextboxes extends React.Component {
 
   render() {
     const style = {
-      position:"absolute",
+      position: "absolute",
       bottom: 30,
       left: 40,
-      background:"#fff",
+      background: "#fff",
       padding: 20,
       borderLeft: "6px solid #666"
     };
@@ -40,10 +55,12 @@ class SliceTextboxes extends React.Component {
         <div>
           <div className="SliceTextboxes-label">Has link?</div>
 
-          <input id={linkOnLabelFor} value="link-on" type="radio" onChange={this.handleLinkCheckChange.bind(this)} checked={this.props.hasLink} />
+          <input id={linkOnLabelFor} value="link-on" type="radio"
+                 onChange={this.handleLinkCheckChange.bind(this)} checked={this.props.hasLink}/>
           <label htmlFor={linkOnLabelFor} className="SliceTextboxes-label inline">Yes</label>
 
-          <input id={linkOffLabelFor} value="link-off" type="radio" onChange={this.handleLinkCheckChange.bind(this)} checked={!this.props.hasLink} />
+          <input id={linkOffLabelFor} value="link-off" type="radio"
+                 onChange={this.handleLinkCheckChange.bind(this)} checked={!this.props.hasLink}/>
           <label htmlFor={linkOffLabelFor} className="SliceTextboxes-label inline">No</label>
         </div>
 
@@ -51,7 +68,9 @@ class SliceTextboxes extends React.Component {
 
         <div>
           <label className="SliceTextboxes-label">Alt Text</label>
-          <input className="SliceTextboxes-textinput" />
+          <input ref="altTextInput" value={this.props.altText}
+                 onChange={this.handleAltTextChange.bind(this)}
+                 className="SliceTextboxes-textinput"/>
         </div>
       </div>
     )
