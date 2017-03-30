@@ -12,9 +12,9 @@ describe("getDistanceModelsFromSlices", () => {
     const result = getDistanceModelsFromSlices(sourceHeight, input);
 
     expect(result).toEqual([
-      {startY: 0, distance: 10},
-      {startY: 10, distance: 90}, //goes until the next one
-      {startY: 100, distance: 300},
+      {startY: 0, distance: 10, sliceId: "initial"},
+      {startY: 10, distance: 90, sliceId: "a"}, //goes until the next one
+      {startY: 100, distance: 300, sliceId: "b"},
     ])
   });
 

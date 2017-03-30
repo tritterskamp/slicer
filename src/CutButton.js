@@ -18,8 +18,15 @@ class CutButton extends React.Component {
         sliceYs: getDistanceModelsFromSlices(imageHeight, slices)
       })
     });
-    fetch(request).then(function(response) {
-        console.log(response)
+    fetch(request).then(response => {
+      return response.json(); //baggage of Request
+    }).then(response => {
+      const result = response.data;
+      console.log(result);
+
+      //Sample response: [ {sliceId:"a", publishedUrl: "/a/s/asdasd.jpg"} ]
+      //So we can map the new image back to the slice.
+      
     })
 
   }

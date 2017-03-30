@@ -18,21 +18,25 @@ export function getDistanceModelsFromSlices(sourceHeight=0, initialSlices={}) {
     const previousSlice = allSlices[i-1] || null;
     const nextSlice = allSlices[i+1] || null;
 
+    //TODO: case for only slice
+
+
     //first slice
     if (!previousSlice) {
-      return { startY: 0, distance: nextSlice.y } //first slice
+      return { startY: 0, distance: nextSlice.y, sliceId:thisSlice._id } //first slice
     }
 
     //slices in the middle
     if (previousSlice && nextSlice) {
-      return { startY: thisSlice.y, distance: nextSlice.y - thisSlice.y}
+      return { startY: thisSlice.y, distance: nextSlice.y - thisSlice.y, sliceId:thisSlice._id}
     }
 
     //last slice
     if (previousSlice && !nextSlice) {
-      return { startY: thisSlice.y, distance: sourceHeight - thisSlice.y}
+      return { startY: thisSlice.y, distance: sourceHeight - thisSlice.y, sliceId:thisSlice._id}
     }
 
+    return null
   });
 
 

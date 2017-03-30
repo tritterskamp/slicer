@@ -20,15 +20,20 @@ server.start((err) => {
   console.log(`Server running at: ${server.info.uri}`);
 });
 
+function salesForceMocker(data, callback) {
+  callback({
+    sliceId: data.sliceId,
+    publishedUrl: "/some/img"
+  });
+}
 
 /** Uploader to salesforce */
 function uploadToSalesforce(data, callback) {
-  /*
-  { name, base64}
-   */
+  /* data schema: { name, fileBase64, sliceId} */
 
   // {"name": "jpg", "id": 23} //ID is tied to the file type
   // {"name": "gif", "id": 20} //ID is tied to the file type
+
 
   const payload = {
     name: data.name,
@@ -40,7 +45,7 @@ function uploadToSalesforce(data, callback) {
   };
 
   console.log('POSTing to Salesforce!');
-  request.post("http://www.exacttargetapis.com/asset/v1/content/assets?access_token=XX", {
+  request.post("http://www.exacttargetapis.com/asset/v1/content/assets?access_token=7hYeizffwGZyQyRgqRqMsxtX", {
       json: payload
     }, function (error, response, body) {
 
@@ -50,12 +55,12 @@ function uploadToSalesforce(data, callback) {
         return;
       }
 
-      if (!error && response.statusCode == 201) {
+      if (!error && response.statusCode === 201) {
 
         console.log('SUCCESS')
         console.log(body);
         if (callback) {
-          callback()
+          callback(); //Carry over what mocker is doing
         }
       }
     }
@@ -70,14 +75,15 @@ server.route({
   path: '/cut',
   handler: function (request, reply) {
 
+    let response = []; //The end result for the client
 
     const payload = JSON.parse(request.payload);
     /* //Wants: //TODO: error handling if neither of these are supplied correctly
      {
      srcImg: "",
      sliceYs: [
-        {startY: xxx, distance: xxx},
-        {startY: xxx, distance: xxx},
+        {startY: xxx, distance: xxx, sliceId: xx},
+        {startY: xxx, distance: xxx, sliceId: xx},
       ]
      }
      */
@@ -93,10 +99,13 @@ server.route({
       const projId = makeId("sliceTest", 12);
 
       let iteratorCount = 1;
+      let sliceId = null; //this gets replaced in every iterations
+
       function cropSeries(array, finalCallback) {
 
         console.log('running cropSeries', array)
         const sliceModel = array[0];
+        sliceId = sliceModel.sliceId
 
         //Friendlier formats
         let useFormat = features.format;
@@ -127,37 +136,42 @@ server.route({
           const outputtedSlicePath = data.path;
 
 
-            //Upload it.
-            uploadToSalesforce({
-              name: outputtedSliceName,
-              fileBase64: getBase64(outputtedSlicePath)
-            }, function(data) {
-              console.log('success!')
-            });
+          //mocking salesforce for now
+          salesForceMocker({ //uploadToSalesforce //TODO
+            name: outputtedSliceName,
+            fileBase64: getBase64(outputtedSlicePath),
+            sliceId: sliceId
+          }, function(data) {
+            response.push(data);
+            console.log('success!')
 
-          //recursive!
-          if (array.length > 1) {
-            iteratorCount += 1; //uptick the iterator for file name
+            //recursive!
+            if (array.length > 1) {
+              iteratorCount += 1; //uptick the iterator for file name
+              cropSeries(
+                array.filter((d, i) => i > 0), //call it again without the first member
+                finalCallback
+              )
+            } else {
+              //Execute the final callback
+              finalCallback(response);
+            }
 
-            //TODO: Not recursive while testing salesforce
-            // cropSeries(
-            //   array.filter((d, i) => i > 0), //call it again without the first member
-            //   finalCallback
-            // )
 
-          } else {
-            //Execute the final callback
-            finalCallback();
-          }
+          });
+
+
+
         });
       }
 
       //kick if off!
-      cropSeries(payload.sliceYs, function () {
+      cropSeries(payload.sliceYs, function(finalData) {
         //send response to client
-        console.log('CROP SERIES COMPLETED!')
-
-        reply('CROPPED');
+        console.log('CROP SERIES COMPLETED!', finalData)
+        reply({
+          data: finalData
+        });
       })
 
     })
