@@ -57,9 +57,7 @@ server.route({
       let iteratorCount = 1;
       function cropSeries(array, finalCallback) {
 
-
         console.log('running cropSeries', array)
-
         const sliceModel = array[0];
 
         //Crop using first member of the array
