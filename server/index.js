@@ -3,51 +3,25 @@
 const Hapi = require('hapi');
 const im = require('imagemagick');
 const easyimg = require('easyimage');
-let base64Img = require('base64-img');
 let request = require('request');
 let fs = require('fs');
 
-function makeId(prefix, length) {
-  prefix = prefix || "";
-  length = length || 10;
-
-  var text = "";
-  var possible = "0123456789";
-
-  for (var i = 0; i < length; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return prefix + "_" + text;
-}
-
-
-function getBase64(imagePath) {
-  return base64Img.base64Sync(imagePath).replace("data:image/jpg;base64,", ""); //note, hardcoded to jpg
-}
-
-
-
-
-
+let makeId = require('./helpers/makeId.js');
+let getBase64 = require('./helpers/getBase64.js');
 
 
 /* START THE SERVER */
 const server = new Hapi.Server();
 server.connection({port: 4000, host: 'localhost', routes: {cors: true}});
 server.start((err) => {
-
   if (err) {
     throw err;
   }
-
   console.log(`Server running at: ${server.info.uri}`);
 });
 
 
-
-
-
-/** Upload to salesforce */
+/** Uploader to salesforce */
 function uploadToSalesforce(data, callback) {
   /*
   { name, base64}
@@ -87,14 +61,7 @@ function uploadToSalesforce(data, callback) {
     }
 );
 
-
-
 }
-
-
-
-
-
 
 
 /** CUT endpoint */
@@ -190,11 +157,7 @@ server.route({
         //send response to client
         console.log('CROP SERIES COMPLETED!')
 
-
-        
-
         reply('CROPPED');
-
       })
 
     })
