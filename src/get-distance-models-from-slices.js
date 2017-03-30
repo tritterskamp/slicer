@@ -7,7 +7,6 @@ export function getDistanceModelsFromSlices(sourceHeight=0, initialSlices={}) {
   // Sort slices by y value so we always crop from top to bottom
   let sortedSlices = modelsFromObject({
     ...initialSlices,
-    "initial": {y: 0} //add initial slice at y=0
   }).sort((a,b) => {
     return a.y > b.y ? 1 : -1
   });

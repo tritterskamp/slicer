@@ -5,6 +5,7 @@ import ImageCanvas from './ImageCanvas'
 import Slices from './Slices'
 import CutBand from './CutBand'
 import CutButton from './CutButton'
+import OutputTextArea from './OutputTextArea'
 
 class App extends Component {
 
@@ -18,8 +19,8 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <h2>Slice</h2>
           <CutButton />
+          <OutputTextArea />
         </div>
 
         <div className="Slices-container" style={slicesContainerStyle}>

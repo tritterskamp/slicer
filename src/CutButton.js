@@ -2,7 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {modelsFromObject} from './helpers/models-from-object.js'
 import {getDistanceModelsFromSlices} from './get-distance-models-from-slices'
-
+import {launchNewBrowserTab, getMarkupOutput} from './get-output.js'
+import {setAppValue} from './redux-actions/app-actions.js'
 
 class CutButton extends React.Component {
 
@@ -27,6 +28,14 @@ class CutButton extends React.Component {
       //Sample response: [ {sliceId:"a", publishedUrl: "/a/s/asdasd.jpg"} ]
       //So we can map the new image back to the slice.
 
+      //Get the markup and put in a new browser tab
+      // launchNewBrowserTab(
+      setAppValue({
+        outputText: getMarkupOutput(result)
+      })
+
+
+      // );
     })
 
   }

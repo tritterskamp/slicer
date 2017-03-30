@@ -3,22 +3,17 @@ import createStore from './create-store'
 
 const store = createStore({
   app: {
+    outputText: null, //gets populated
     imageSrc: "/chopping-block/S1-Trend-Sandals.jpg",
     imageWidth: 0,
     imageHeight: 0,
     slices: {
-      "a": {
-        y: 512,
-        hasLink: false,
-        linkText: "",
-        altText: "Cool Shoes",
-      },
-      "b": {
-        y: 700,
+      "initial": {
+        y: 0, //CANNOT DELETE THIS ONE
         hasLink: true,
-        linkText: "http://famousfootwear.com/yep",
-        altText: "Shop Now",
-      },
+        linkText: "",
+        altText: "",
+      }
     }
   }
 });
