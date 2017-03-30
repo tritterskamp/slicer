@@ -4,7 +4,7 @@ import createStore from './create-store'
 const store = createStore({
   app: {
     outputText: null, //gets populated
-    imageSrc: "/chopping-block/S1-Trend-Sandals.jpg",
+    imageSrc: "/chopping-block/ap5.jpg",
     imageWidth: 0,
     imageHeight: 0,
     slices: {
