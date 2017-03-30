@@ -9,16 +9,13 @@ class CutButton extends React.Component {
   handleCutButton() {
     console.log('CUT!!!');
 
+    const {imageHeight, slices} = this.props;
+
     let request = new Request('http://localhost:4000/cut', {
       method: 'POST',
       body: JSON.stringify({
         srcImg: this.props.imageSrc,
-        sliceYs: this.props.slices.map( s => {
-          return {
-            startY: s.y,
-            distance: 200
-          }
-        })
+        sliceYs: getDistanceModelsFromSlices(imageHeight, slices)
       })
     });
     fetch(request).then(function(response) {
@@ -39,6 +36,7 @@ class CutButton extends React.Component {
 export default connect((state, props) => {
   return {
     imageSrc: state.app.imageSrc,
-    slices: modelsFromObject(state.app.slices)
+    slices: state.app.slices,
+    imageHeight: state.app.imageHeight,
   }
 })(CutButton)

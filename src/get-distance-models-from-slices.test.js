@@ -4,29 +4,36 @@ describe("getDistanceModelsFromSlices", () => {
   it("takes in an object of models and provides a list of distanceModels", ()=> {
 
     const input = {
+      "b": {y: 100}, //It sorts them properly, too.
       "a": {y: 10},
-      "b": {y: 100},
-    }
+    };
+    const sourceHeight = 400;
 
+    const result = getDistanceModelsFromSlices(sourceHeight, input);
+
+    expect(result).toEqual([
+      {startY: 0, distance: 10},
+      {startY: 10, distance: 90}, //goes until the next one
+      {startY: 100, distance: 300},
+    ])
   });
 
-  xit("sorts the input by y values first", ()=> {
-    const input = {
-      "b": {y: 200},
-      "a": {y: 10}, //this should be sorted ahead of the other one first
-    }
-  });
-
-  xit("the distances should add up to the height of the image", ()=> {
-    const imageHeight = 50;
+  it("the distances should add up to the height of the image", ()=> {
+    const sourceHeight = 50;
     const input = {
       "a": {y: 10},
       "b": {y: 20},
       "c": {y: 30},
       "d": {y: 40},
-    }
+    };
 
-    //The distances of output should add up to 50
+    const result = getDistanceModelsFromSlices(sourceHeight, input);
+
+    //Make sure that the sum of all slice distances add up to equal the source height
+    const totalDistanceHeight = result.map(distanceModel => {
+      return distanceModel.distance
+    }).reduce((a,b) => a+b);
+    expect(totalDistanceHeight).toEqual(sourceHeight);
   });
 
 
