@@ -7,18 +7,12 @@ const store = createStore({
     imageWidth: 0,
     imageHeight: 0,
     slices: {
-      "a": {
-        y: 512,
-        hasLink: false,
-        linkText: "",
-        altText: "Cool Shoes",
-      },
-      "b": {
-        y: 700,
+      "initial": {
+        y: 0, //CANNOT DELETE THIS ONE
         hasLink: true,
-        linkText: "http://famousfootwear.com/yep",
-        altText: "Shop Now",
-      },
+        linkText: "",
+        altText: "",
+      }
     }
   }
 });
