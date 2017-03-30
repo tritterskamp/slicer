@@ -40,7 +40,10 @@ server.route({
     /* //Wants: //TODO: error handling if neither of these are supplied correctly
      {
      srcImg: "",
-     sliceYs: []
+     sliceYs: [
+        {startY: xxx, distance: xxx},
+        {startY: xxx, distance: xxx},
+      ]
      }
      */
 
