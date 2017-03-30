@@ -3,6 +3,8 @@
 const Hapi = require('hapi');
 const im = require('imagemagick');
 const easyimg = require('easyimage');
+var base64Img = require('base64-img');
+var request = require('request');
 
 function makeId(prefix, length) {
   prefix = prefix || "";
@@ -17,9 +19,20 @@ function makeId(prefix, length) {
   return prefix + "_" + text;
 }
 
+
+function getBase64(imagePath) {
+  return base64Img.base64Sync(imagePath);
+}
+
+
+
+
+
+
+
+/* START THE SERVER */
 const server = new Hapi.Server();
 server.connection({port: 4000, host: 'localhost', routes: {cors: true}});
-
 server.start((err) => {
 
   if (err) {
@@ -28,6 +41,62 @@ server.start((err) => {
 
   console.log(`Server running at: ${server.info.uri}`);
 });
+
+
+
+
+
+/** Upload to salesforce */
+function uploadToSalesforce(data, callback) {
+  /*
+  { name, base64}
+   */
+
+  // {"name": "jpg", "id": 23} //ID is tied to the file type
+  // {"name": "gif", "id": 20} //ID is tied to the file type
+
+  const payload = {
+    name: data.name,
+    assetType: {
+      "name": "jpg",
+      "id": 23
+    },
+    fileBase64: data.base64
+  };
+
+  console.log('POSTing to Salesforce!')
+
+  request.post("http://www.exacttargetapis.com/asset/v1/content/assets?access_token=78yxnjXttBXFGegqc5loBLL0",
+    { json: payload },
+  function (error, response, body) {
+
+    if (error) {
+      console.log('ERROR')
+      console.log(error)
+      return;
+    }
+
+    if (!error && response.statusCode == 201) {
+
+      console.log('SUCCESS')
+      console.log(body);
+      if (callback) {
+        callback()
+      }
+      
+    }
+  }
+);
+
+
+
+}
+
+
+
+
+
+
 
 /** CUT endpoint */
 server.route({
@@ -82,18 +151,41 @@ server.route({
 
           gravity: "North",
           quality: 100,
-        }).then(function() {
+        }).then(function(data) {
+
+          const outputtedSliceName = data.name;
+          const outputtedSlicePath = data.path;
 
           //recursive!
           if (array.length > 1) {
 
+
+
+
+            //Do some stuff before continuing the crop.
+            // console.log(
+            //   getBase64(outputtedSlicePath)
+            // );
+
+            uploadToSalesforce({
+              name: outputtedSliceName,
+              fileBase64: getBase64(outputtedSlicePath)
+            }, function(data) {
+              console.log('success!')
+            });
+
+
+
+
             //prevCrop = outputPath; //use this one next time
             iteratorCount += 1; //uptick the iterator for file name
 
-            cropSeries(
-              array.filter((d, i) => i > 0), //call it again without the first member
-              finalCallback
-            )
+            //TODO: Not recursive while testing salesforce
+            // cropSeries(
+            //   array.filter((d, i) => i > 0), //call it again without the first member
+            //   finalCallback
+            // )
+
           } else {
             //Execute the final callback
             finalCallback();
@@ -112,4 +204,4 @@ server.route({
   }
 
 
-})
+});
