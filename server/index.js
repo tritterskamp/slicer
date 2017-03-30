@@ -2,6 +2,7 @@
 
 const Hapi = require('hapi');
 const im = require('imagemagick');
+const easyimg = require('easyimage');
 
 function makeId(prefix, length) {
   prefix = prefix || "";
@@ -46,37 +47,44 @@ server.route({
     console.log(payload);
 
     const originalImagePath = `public${payload.srcImg}`;
+
     im.identify(originalImagePath, function (err, features) {
       if (err) throw err;
       //features: { format: 'JPEG', width: 3904, height: 2622, depth: 8 }
 
+      const projId = makeId("slice", 5);
 
-      const groupId = makeId("slice", 5);
-
-      let prevCrop = null; //make space to record the previous one (to crop the next one)
       let iteratorCount = 1;
-
       function cropSeries(array, finalCallback) {
 
         console.log('running cropSeries', array)
+        const sliceModel = array[0];
 
         //Crop using first member of the array
-        const sliceFileName = `${groupId}_${iteratorCount}.${features.format}`; //slice_asdas_0.jpg
+        const sliceFileName = `${projId}_${iteratorCount}.${features.format}`; //slice_asdas_0.jpg
         const outputPath = `public/output/${sliceFileName}`;
 
-        im.crop({
-          srcPath: prevCrop || originalImagePath, //start with the originalImagePath, then use the next one
-          dstPath: outputPath,
+        easyimg.rescrop({
+          src: originalImagePath, //always crop from the original
+          dst: outputPath,
           width: features.width,
-          height: array[0],
-          quality: 1,
-          gravity: "North"
-        }, function (err, stdout, stderr) {
+          height: features.height,
+
+          x: 0,
+          y: sliceModel.startY,
+
+          cropwidth: features.width,
+          cropheight: sliceModel.distance,
+
+
+          gravity: "North",
+          quality: 100,
+        }).then(function() {
 
           //recursive!
           if (array.length > 1) {
 
-            prevCrop = outputPath; //use this one next time
+            //prevCrop = outputPath; //use this one next time
             iteratorCount += 1; //uptick the iterator for file name
 
             cropSeries(
