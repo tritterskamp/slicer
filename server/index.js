@@ -47,7 +47,7 @@ function uploadToSalesforce(data, callback) {
   };
 
   console.log('POSTing to Salesforce!');
-  request.post("http://www.exacttargetapis.com/asset/v1/content/assets?access_token=7hYeizffwGZyQyRgqRqMsxtX", {
+  request.post("http://www.exacttargetapis.com/asset/v1/content/assets?access_token=7mlkMXPuxOCXrvzubrWKN8PB", {
       json: payload
     }, function (error, response, body) {
 
@@ -59,10 +59,17 @@ function uploadToSalesforce(data, callback) {
 
       if (!error && response.statusCode === 201) {
 
-        console.log('SUCCESS')
+        console.log('UPLOAD SUCCESS');
         console.log(body);
+        const uploadedProperties = body.fileProperties; //from API response
         if (callback) {
-          callback(); //Carry over what mocker is doing
+          callback({ //Same as what the mockup does
+            sliceId: data.sliceId,
+            sliceWidth: uploadedProperties.width,
+            sliceHeight: uploadedProperties.height,
+            publishedUrl: uploadedProperties.publishedURL
+          });
+
         }
       }
     }
@@ -139,7 +146,8 @@ server.route({
 
 
           //mocking salesforce for now
-          salesForceMocker({ //uploadToSalesforce //TODO
+          //salesForceMocker({ //swappable line
+          uploadToSalesforce({
             name: outputtedSliceName,
             fileBase64: getBase64(outputtedSlicePath),
             sliceId: sliceId
