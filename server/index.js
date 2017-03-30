@@ -3,8 +3,9 @@
 const Hapi = require('hapi');
 const im = require('imagemagick');
 const easyimg = require('easyimage');
-var base64Img = require('base64-img');
-var request = require('request');
+let base64Img = require('base64-img');
+let request = require('request');
+let fs = require('fs');
 
 function makeId(prefix, length) {
   prefix = prefix || "";
@@ -21,7 +22,7 @@ function makeId(prefix, length) {
 
 
 function getBase64(imagePath) {
-  return base64Img.base64Sync(imagePath);
+  return base64Img.base64Sync(imagePath).replace("data:image/jpg;base64,", ""); //note, hardcoded to jpg
 }
 
 
@@ -57,35 +58,33 @@ function uploadToSalesforce(data, callback) {
 
   const payload = {
     name: data.name,
+    file: data.fileBase64,
     assetType: {
       "name": "jpg",
       "id": 23
     },
-    fileBase64: data.base64
   };
 
-  console.log('POSTing to Salesforce!')
+  console.log('POSTing to Salesforce!');
+  request.post("http://www.exacttargetapis.com/asset/v1/content/assets?access_token=XX", {
+      json: payload
+    }, function (error, response, body) {
 
-  request.post("http://www.exacttargetapis.com/asset/v1/content/assets?access_token=78yxnjXttBXFGegqc5loBLL0",
-    { json: payload },
-  function (error, response, body) {
-
-    if (error) {
-      console.log('ERROR')
-      console.log(error)
-      return;
-    }
-
-    if (!error && response.statusCode == 201) {
-
-      console.log('SUCCESS')
-      console.log(body);
-      if (callback) {
-        callback()
+      if (error) {
+        console.log('ERROR')
+        console.log(error)
+        return;
       }
-      
+
+      if (!error && response.statusCode == 201) {
+
+        console.log('SUCCESS')
+        console.log(body);
+        if (callback) {
+          callback()
+        }
+      }
     }
-  }
 );
 
 
@@ -132,8 +131,12 @@ server.route({
         console.log('running cropSeries', array)
         const sliceModel = array[0];
 
+        //Friendlier formats
+        let useFormat = features.format;
+        if (useFormat === "JPEG") { useFormat = "jpg" }
+
         //Crop using first member of the array
-        const sliceFileName = `${projId}_proj${iteratorCount}.${features.format}`; //slice_asdas_0.jpg
+        const sliceFileName = `${projId}_proj${iteratorCount}.${useFormat}`; //slice_asdas_0.jpg
         const outputPath = `public/output/${sliceFileName}`;
 
         easyimg.rescrop({
@@ -156,17 +159,8 @@ server.route({
           const outputtedSliceName = data.name;
           const outputtedSlicePath = data.path;
 
-          //recursive!
-          if (array.length > 1) {
 
-
-
-
-            //Do some stuff before continuing the crop.
-            // console.log(
-            //   getBase64(outputtedSlicePath)
-            // );
-
+            //Upload it.
             uploadToSalesforce({
               name: outputtedSliceName,
               fileBase64: getBase64(outputtedSlicePath)
@@ -174,10 +168,8 @@ server.route({
               console.log('success!')
             });
 
-
-
-
-            //prevCrop = outputPath; //use this one next time
+          //recursive!
+          if (array.length > 1) {
             iteratorCount += 1; //uptick the iterator for file name
 
             //TODO: Not recursive while testing salesforce
@@ -197,7 +189,12 @@ server.route({
       cropSeries(payload.sliceYs, function () {
         //send response to client
         console.log('CROP SERIES COMPLETED!')
+
+
+        
+
         reply('CROPPED');
+
       })
 
     })
