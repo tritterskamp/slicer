@@ -7,8 +7,8 @@ const store = createStore({
     imageWidth: 0,
     imageHeight: 0,
     slices: {
-      "a": {y: 115},
-      "b": {y: 200},
+      "a": {y: 10},
+      "b": {y: 400},
     }
   }
 });
