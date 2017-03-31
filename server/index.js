@@ -188,3 +188,14 @@ server.route({
 
 
 });
+
+
+/** CUT endpoint */
+server.route({
+  method: 'GET',
+  path: '/requestToken',
+  handler() {
+  }
+});
+
+

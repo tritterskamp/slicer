@@ -22,8 +22,16 @@ class App extends Component {
   render() {
 
     const {
-      salesforceAuthToken
+      salesforceAuthToken,
+      salesforceClientKey,
+      salesforceSecretKey
     } = this.props;
+
+    if (!salesforceSecretKey || !salesforceClientKey) {
+      return (
+        <div>NEEDS SETUP: No Client or Secret key provided to ENV. </div>
+      )
+    }
 
     if (!salesforceAuthToken) {
       return (
