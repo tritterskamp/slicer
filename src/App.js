@@ -1,43 +1,47 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import './App.css';
-import ImageCanvas from './ImageCanvas'
-import Slices from './Slices'
-import CutBand from './CutBand'
-import CutButton from './CutButton'
-import OutputTextArea from './OutputTextArea'
+import SliceApp from './SliceApp'
+import {getAuthToken} from './get-auth-token'
+import {setAppValue} from './redux-actions/app-actions.js'
+import LoadingToken from './LoadingToken'
 
 class App extends Component {
 
+  componentWillMount() {
+    //Check for (or get a new) token from Salesforce
+    getAuthToken(token => {
+      setAppValue({
+        salesforceAuthToken: token
+      })
+    });
+  }
+
+
+
   render() {
 
-    const slicesContainerStyle = {
-      width: this.props.imageWidth,
-      height: this.props.imageHeight
-    };
+    const {
+      salesforceAuthToken
+    } = this.props;
+
+    if (!salesforceAuthToken) {
+      return (
+        <LoadingToken />
+      )
+    }
+
 
     return (
-      <div className="App">
-        <div className="App-header">
-          <CutButton />
-          <OutputTextArea />
-        </div>
-
-        <div className="Slices-container" style={slicesContainerStyle}>
-          <CutBand />
-          <Slices />
-          <ImageCanvas src={this.props.imageSrc} />
-        </div>
-
-      </div>
-    );
+      <SliceApp />
+    )
   }
 }
 
 export default connect((state, props) => {
   return {
-    imageSrc: state.app.imageSrc,
-    imageWidth: state.app.imageWidth,
-    imageHeight: state.app.imageHeight,
+    salesforceClientKey: state.app.salesforceClientKey,
+    salesforceSecretKey: state.app.salesforceSecretKey,
+    salesforceAuthToken: state.app.salesforceAuthToken
   }
 })(App)

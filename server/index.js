@@ -36,7 +36,6 @@ function uploadToSalesforce(data, callback) {
   // {"name": "jpg", "id": 23} //ID is tied to the file type
   // {"name": "gif", "id": 20} //ID is tied to the file type
 
-
   const payload = {
     name: data.name,
     file: data.fileBase64,

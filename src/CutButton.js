@@ -1,8 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {modelsFromObject} from './helpers/models-from-object.js'
 import {getDistanceModelsFromSlices} from './get-distance-models-from-slices'
-import {launchNewBrowserTab, getMarkupOutput} from './get-output.js'
+import {getMarkupOutput} from './get-output.js'
 import {setAppValue} from './redux-actions/app-actions.js'
 
 class CutButton extends React.Component {

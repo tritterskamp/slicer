@@ -14,7 +14,14 @@ const store = createStore({
         linkText: "",
         altText: "",
       }
-    }
+    },
+
+    //Salesforce auth process
+    salesforceClientKey: process.env.SALESFORCE_CLIENT_KEY || null,
+    salesforceSecretKey: process.env.SALESFORCE_SECRET_ID || null,
+    salesforceAuthToken: null //Provided by salesforce using Client and Secret. Need to send this with Cut/Upload request
+
+
   }
 });
 
