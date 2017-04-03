@@ -12,8 +12,9 @@ let uuid = require('uuid');
 const _fileHandler = function (file, options) {
   if (!file) throw new Error('no file');
 
-  const filename = uuid.v1();
-  const path = `${options.dest}${filename}`;
+  const filenameBase = uuid.v1();
+  const fileExtension = file.hapi.filename.split('.').pop();
+  const path = `${options.dest}${filenameBase}.${fileExtension}`;
   const fileStream = fs.createWriteStream(path);
 
   return new Promise((resolve, reject) => {
@@ -25,15 +26,13 @@ const _fileHandler = function (file, options) {
 
     file.on('end', function (err) {
 
-      console.log('end', file)
-
       const fileDetails = {
         fieldname: file.hapi.name,
         originalname: file.hapi.filename,
-        filename,
+        filename: `${filenameBase}.${fileExtension}`, //just for the response.
         mimetype: file.hapi.headers['content-type'],
         destination: `${options.dest}`,
-        path,
+        path, //path is the actual placement of the file
         size: fs.statSync(path).size,
       };
 

@@ -1,5 +1,7 @@
 import React from 'react';
+import {setAppValue} from './redux-actions/app-actions.js'
 import './ImageUploadApp.css'
+
 
 class ImageUploadApp extends React.Component {
 
@@ -28,23 +30,14 @@ class ImageUploadApp extends React.Component {
       self.setState({isDraggingOver: false});
 
     }).on('drop', function (e) {
-
-
       droppedFiles = e.originalEvent.dataTransfer.files;
-      console.log(droppedFiles);
-
       let ajaxData = new FormData($form.get(0));
-      let $input = window.$('#js-file-input');
       if (droppedFiles) {
         window.$.each( droppedFiles, function(i, file) {
           ajaxData.append( "theFile", file );
         });
       }
 
-      console.log(ajaxData)
-
-
-      console.log('posting')
       window.$.ajax({
         url: 'http://localhost:4000/uploadImage',
         type: 'POST',
@@ -53,8 +46,9 @@ class ImageUploadApp extends React.Component {
         cache: false,
         contentType: false,
         processData: false,
-        success: function(data) {
-          console.log('SUCCESS', data)
+        success: function(res) {
+          console.log('SUCCESS', res.data);
+          self.handleSuccessfulUpload(res.data);
         },
         error: function(data) {
           // Log the error, show an alert, whatever works for you
@@ -65,6 +59,14 @@ class ImageUploadApp extends React.Component {
 
 
     });
+  }
+
+  handleSuccessfulUpload(imgData) {
+    const browserReadySrc = imgData.path.replace("public", "");
+    setAppValue({
+      isImageReady: true,
+      imageSrc: browserReadySrc
+    })
   }
 
 
