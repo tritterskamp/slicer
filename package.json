@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
+    "nodemon": "^1.11.0",
     "react-scripts": "0.9.5"
   },
   "dependencies": {
@@ -17,7 +18,7 @@
     "request": "^2.81.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start | nodemon server/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
