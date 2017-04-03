@@ -11,8 +11,8 @@ export function getAuthToken(callback=function(){}) {
 
   //If we have a non-expired, automatically fire the callback
   if (localToken && Date.now() < localToken.localExpirationTimestamp) {
-    console.log('using saved token')
-    callback( localToken.value )
+    console.log('using saved token');
+    callback( localToken.value );
     return;
   }
 
@@ -30,7 +30,7 @@ export function getAuthToken(callback=function(){}) {
 
     //Set Data in localstorage so we don't need to hit it for another 30 minutes
     //...
-    console.log('setting')
+    console.log('setting');
     window.localStorage.setItem("savedSalesforceAuthToken", JSON.stringify({
       value: data.accessToken,
       localExpirationTimestamp: Date.now() + 1800000 //expire 30 minutes from now

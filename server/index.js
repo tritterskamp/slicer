@@ -31,10 +31,18 @@ function salesForceMocker(data, callback) {
 
 /** Uploader to salesforce */
 function uploadToSalesforce(data, callback) {
-  /* data schema: { name, fileBase64, sliceId} */
+  /* data schema: { name, fileBase64, sliceId, accessToken: "asdasdasd"} */
 
+  //Encoding:
   // {"name": "jpg", "id": 23} //ID is tied to the file type
   // {"name": "gif", "id": 20} //ID is tied to the file type
+
+
+  const accessToken = data.accessToken;
+  if (!accessToken) {
+    console.log('ERROR -> No accessToken defined!')
+    return;
+  }
 
   const payload = {
     name: data.name,
@@ -46,7 +54,7 @@ function uploadToSalesforce(data, callback) {
   };
 
   console.log('POSTing to Salesforce!');
-  request.post("http://www.exacttargetapis.com/asset/v1/content/assets?access_token=7mlkMXPuxOCXrvzubrWKN8PB", {
+  request.post(`http://www.exacttargetapis.com/asset/v1/content/assets?access_token=${accessToken}`, {
       json: payload
     }, function (error, response, body) {
 
@@ -86,6 +94,7 @@ server.route({
     let response = []; //The end result for the client
 
     const payload = JSON.parse(req.payload);
+    const accessToken = payload.accessToken;
     /* //Wants: //TODO: error handling if neither of these are supplied correctly
      {
      srcImg: "",
@@ -149,7 +158,8 @@ server.route({
           uploadToSalesforce({
             name: outputtedSliceName,
             fileBase64: getBase64(outputtedSlicePath),
-            sliceId: sliceId
+            sliceId: sliceId,
+            accessToken: accessToken
           }, function(data) {
             response.push(data);
             console.log('success!')
