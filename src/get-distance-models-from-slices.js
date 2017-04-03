@@ -18,7 +18,9 @@ export function getDistanceModelsFromSlices(sourceHeight=0, initialSlices={}) {
     const nextSlice = allSlices[i+1] || null;
 
     //TODO: case for only slice
-
+    if (sortedSlices.length === 1) {
+      return { startY: 0, distance: sourceHeight, sliceId:thisSlice._id } //only slice
+    }
 
     //first slice
     if (!previousSlice) {

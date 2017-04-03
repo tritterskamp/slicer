@@ -54,6 +54,8 @@ function uploadToSalesforce(data, callback) {
     },
   };
 
+  console.log(payload)
+
   console.log('POSTing to Salesforce!');
   request.post(`http://www.exacttargetapis.com/asset/v1/content/assets?access_token=${accessToken}`, {
       json: payload
@@ -64,6 +66,8 @@ function uploadToSalesforce(data, callback) {
         console.log(error)
         return;
       }
+
+      console.log('res', response)
 
       if (!error && response.statusCode === 201) {
 
@@ -186,6 +190,7 @@ server.route({
       }
 
       //kick if off!
+      console.log('kickingoff', payload.sliceYs)
       cropSeries(payload.sliceYs, function(finalData) {
         //send response to client
         console.log('CROP SERIES COMPLETED!', finalData)

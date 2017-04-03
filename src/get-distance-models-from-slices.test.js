@@ -4,6 +4,7 @@ describe("getDistanceModelsFromSlices", () => {
   it("takes in an object of models and provides a list of distanceModels", ()=> {
 
     const input = {
+      "initial": {y:0},
       "b": {y: 100}, //It sorts them properly, too.
       "a": {y: 10},
     };
@@ -18,9 +19,30 @@ describe("getDistanceModelsFromSlices", () => {
     ])
   });
 
+
+  it("returns one slice when only the initial 0 divider is present", ()=> {
+
+    const input = {
+      "initial": {y:0},
+    };
+    const sourceHeight = 400;
+
+    const result = getDistanceModelsFromSlices(sourceHeight, input);
+
+    expect(result).toEqual([
+      {startY: 0, distance: 400, sliceId: "initial"},
+    ])
+  });
+
+
+
+
+
+
   it("the distances should add up to the height of the image", ()=> {
     const sourceHeight = 50;
     const input = {
+      "initial": {y:0},
       "a": {y: 10},
       "b": {y: 20},
       "c": {y: 30},
