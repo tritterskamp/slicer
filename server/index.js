@@ -5,6 +5,7 @@ const im = require('imagemagick');
 const easyimg = require('easyimage');
 let request = require('request');
 let fs = require('fs');
+let uploader = require('./uploader');
 
 let makeId = require('./helpers/makeId.js');
 let getBase64 = require('./helpers/getBase64.js');
@@ -226,6 +227,34 @@ server.route({
       //Send response to client
       reply(response.body) //{accessToken: 'XXXX', expiresIn: XXXX}
     });
+  }
+});
+
+
+
+/** Upload image to public/chopping-block folder */
+server.route({
+  method: 'POST',
+  path: '/uploadImage',
+  config: {
+    payload: {
+      output: 'stream',
+      allow: 'multipart/form-data' // important
+    }
+  },
+  handler(req, reply) {
+    console.log('PAYLOAD', req.payload);
+    //const data = req.payload.theFile;
+    const file = req.payload.theFile;
+    const fileOptions = { dest: `public/chopping-block/` };
+
+    uploader(file, fileOptions).then(fileDetails => {
+      console.log('FD', fileDetails)
+      reply({
+        data: fileDetails
+      })
+    });
+
   }
 });
 

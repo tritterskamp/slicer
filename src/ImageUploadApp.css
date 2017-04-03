@@ -1,0 +1,12 @@
+.ImageUploadApp .drop-box {
+    display:block;
+    padding: 100px;
+    width: 300px;
+    text-align:center;
+    border:1px dotted #ddd;
+    outline: 2px dashed black;
+    outline-offset: -10px;
+}
+.ImageUploadApp.is-dragging-over .drop-box {
+    background: wheat;
+}

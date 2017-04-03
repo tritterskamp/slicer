@@ -5,6 +5,7 @@ import SliceApp from './SliceApp'
 import {getAuthToken} from './get-auth-token'
 import {setAppValue} from './redux-actions/app-actions.js'
 import LoadingToken from './LoadingToken'
+import ImageUploadApp from './ImageUploadApp'
 
 class App extends Component {
 
@@ -25,7 +26,8 @@ class App extends Component {
     const {
       salesforceAuthToken,
       salesforceClientKey,
-      salesforceSecretKey
+      salesforceSecretKey,
+      isImageReady
     } = this.props;
 
     if (!salesforceSecretKey || !salesforceClientKey) {
@@ -34,13 +36,21 @@ class App extends Component {
       )
     }
 
+    //We need Auth
     if (!salesforceAuthToken) {
       return (
         <LoadingToken />
       )
     }
 
+    //We need to choose an image
+    if (!isImageReady) {
+      return (
+        <ImageUploadApp />
+      )
+    }
 
+    //We are ready to slice!
     return (
       <SliceApp />
     )
@@ -49,6 +59,7 @@ class App extends Component {
 
 export default connect((state, props) => {
   return {
+    isImageReady: state.app.isImageReady,
     salesforceClientKey: state.app.salesforceClientKey,
     salesforceSecretKey: state.app.salesforceSecretKey,
     salesforceAuthToken: state.app.salesforceAuthToken
