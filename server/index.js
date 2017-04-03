@@ -81,11 +81,11 @@ function uploadToSalesforce(data, callback) {
 server.route({
   method: 'POST',
   path: '/cut',
-  handler: function (request, reply) {
+  handler: function (req, reply) {
 
     let response = []; //The end result for the client
 
-    const payload = JSON.parse(request.payload);
+    const payload = JSON.parse(req.payload);
     /* //Wants: //TODO: error handling if neither of these are supplied correctly
      {
      srcImg: "",
@@ -190,11 +190,32 @@ server.route({
 });
 
 
-/** CUT endpoint */
+/** Proxy for getting SalesForce access_token */
 server.route({
-  method: 'GET',
+  method: 'POST',
   path: '/requestToken',
-  handler() {
+  handler(req, reply) {
+    const reqUrl = "https://auth.exacttargetapis.com/v1/requestToken";
+
+    const options = {
+      uri: reqUrl,
+      json: {
+        "clientId" : req.payload.clientId,
+        "clientSecret" : req.payload.clientSecret
+      }
+    };
+
+    request.post(options, function (error, response, body) {
+
+      if (error) {
+        console.log('ERROR')
+        console.log(error)
+        return;
+      }
+
+      //Send response to client
+      reply(response.body) //{accessToken: 'XXXX', expiresIn: XXXX}
+    });
   }
 });
 

@@ -16,7 +16,7 @@ export function getAuthToken(callback=function(){}) {
 
   window.$.ajax({
     type: "POST",
-    url: "https://auth.exacttargetapis.com/v1/requestToken",
+    url: "http://localhost:4000/requestToken",
     data: data,
     dataType: "json"
   }).done(data => {
