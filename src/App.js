@@ -11,6 +11,7 @@ class App extends Component {
   componentWillMount() {
     //Check for (or get a new) token from Salesforce
     getAuthToken(token => {
+      //Set the received token in redux state
       setAppValue({
         salesforceAuthToken: token
       })
