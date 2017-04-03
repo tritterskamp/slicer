@@ -31,11 +31,18 @@ function salesForceMocker(data, callback) {
 
 /** Uploader to salesforce */
 function uploadToSalesforce(data, callback) {
-  /* data schema: { name, fileBase64, sliceId} */
+  /* data schema: { name, fileBase64, sliceId, accessToken: "asdasdasd"} */
 
+  //Encoding:
   // {"name": "jpg", "id": 23} //ID is tied to the file type
   // {"name": "gif", "id": 20} //ID is tied to the file type
 
+
+  const accessToken = data.accessToken;
+  if (!accessToken) {
+    console.log('ERROR -> No accessToken defined!')
+    return;
+  }
 
   const payload = {
     name: data.name,
@@ -47,7 +54,7 @@ function uploadToSalesforce(data, callback) {
   };
 
   console.log('POSTing to Salesforce!');
-  request.post("http://www.exacttargetapis.com/asset/v1/content/assets?access_token=7mlkMXPuxOCXrvzubrWKN8PB", {
+  request.post(`http://www.exacttargetapis.com/asset/v1/content/assets?access_token=${accessToken}`, {
       json: payload
     }, function (error, response, body) {
 
@@ -82,11 +89,12 @@ function uploadToSalesforce(data, callback) {
 server.route({
   method: 'POST',
   path: '/cut',
-  handler: function (request, reply) {
+  handler: function (req, reply) {
 
     let response = []; //The end result for the client
 
-    const payload = JSON.parse(request.payload);
+    const payload = JSON.parse(req.payload);
+    const accessToken = payload.accessToken;
     /* //Wants: //TODO: error handling if neither of these are supplied correctly
      {
      srcImg: "",
@@ -150,7 +158,8 @@ server.route({
           uploadToSalesforce({
             name: outputtedSliceName,
             fileBase64: getBase64(outputtedSlicePath),
-            sliceId: sliceId
+            sliceId: sliceId,
+            accessToken: accessToken
           }, function(data) {
             response.push(data);
             console.log('success!')
@@ -189,3 +198,35 @@ server.route({
 
 
 });
+
+
+/** Proxy for getting SalesForce access_token */
+server.route({
+  method: 'POST',
+  path: '/requestToken',
+  handler(req, reply) {
+    const reqUrl = "https://auth.exacttargetapis.com/v1/requestToken";
+
+    const options = {
+      uri: reqUrl,
+      json: {
+        "clientId" : req.payload.clientId,
+        "clientSecret" : req.payload.clientSecret
+      }
+    };
+
+    request.post(options, function (error, response, body) {
+
+      if (error) {
+        console.log('ERROR')
+        console.log(error)
+        return;
+      }
+
+      //Send response to client
+      reply(response.body) //{accessToken: 'XXXX', expiresIn: XXXX}
+    });
+  }
+});
+
+

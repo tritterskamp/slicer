@@ -1,8 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {modelsFromObject} from './helpers/models-from-object.js'
 import {getDistanceModelsFromSlices} from './get-distance-models-from-slices'
-import {launchNewBrowserTab, getMarkupOutput} from './get-output.js'
+import {getMarkupOutput} from './get-output.js'
 import {setAppValue} from './redux-actions/app-actions.js'
 
 class CutButton extends React.Component {
@@ -12,9 +11,16 @@ class CutButton extends React.Component {
 
     const {imageHeight, slices} = this.props;
 
+    //Bail if no access token
+    if (!this.props.salesforceAuthToken) {
+      console.warn('No access token in `handleCutButton`')
+      return;
+    }
+
     let request = new Request('http://localhost:4000/cut', {
       method: 'POST',
       body: JSON.stringify({
+        accessToken: this.props.salesforceAuthToken,
         srcImg: this.props.imageSrc,
         sliceYs: getDistanceModelsFromSlices(imageHeight, slices)
       })
@@ -51,6 +57,7 @@ class CutButton extends React.Component {
 
 export default connect((state, props) => {
   return {
+    salesforceAuthToken: state.app.salesforceAuthToken,
     imageSrc: state.app.imageSrc,
     slices: state.app.slices,
     imageHeight: state.app.imageHeight,
