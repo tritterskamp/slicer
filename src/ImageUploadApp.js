@@ -28,6 +28,8 @@ class ImageUploadApp extends React.Component {
       self.setState({isDraggingOver: false});
 
     }).on('drop', function (e) {
+
+
       droppedFiles = e.originalEvent.dataTransfer.files;
       console.log(droppedFiles);
 
@@ -35,9 +37,12 @@ class ImageUploadApp extends React.Component {
       let $input = window.$('#js-file-input');
       if (droppedFiles) {
         window.$.each( droppedFiles, function(i, file) {
-          ajaxData.append( $input.attr('name'), file );
+          ajaxData.append( "theFile", file );
         });
       }
+
+      console.log(ajaxData)
+
 
       console.log('posting')
       window.$.ajax({
@@ -68,7 +73,7 @@ class ImageUploadApp extends React.Component {
     return (
       <form className={`ImageUploadApp ${draggingClass}`} encType="multipart/form-data">
         <div>
-          <input type="file" name="files[]" id="js-file-input"/>
+          <input type="file" name="file" id="js-file-input"/>
           <label className="drop-box" htmlFor="file">
             <strong>Choose a file</strong>
             <span> or drag it here</span>.

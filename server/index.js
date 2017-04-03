@@ -5,11 +5,7 @@ const im = require('imagemagick');
 const easyimg = require('easyimage');
 let request = require('request');
 let fs = require('fs');
-
-
-import {
-  loadCollection, uploader
-} from './uploader';
+let uploader = require('./uploader');
 
 let makeId = require('./helpers/makeId.js');
 let getBase64 = require('./helpers/getBase64.js');
@@ -247,9 +243,18 @@ server.route({
     }
   },
   handler(req, reply) {
-    console.log(req.payload);
+    console.log('PAYLOAD', req.payload);
+    //const data = req.payload.theFile;
+    const file = req.payload.theFile;
+    const fileOptions = { dest: `public/chopping-block/` };
 
-    reply("IDK YET lol")
+    uploader(file, fileOptions).then(fileDetails => {
+      console.log('FD', fileDetails)
+      reply({
+        data: fileDetails
+      })
+    });
+
   }
 });
 
