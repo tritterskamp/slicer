@@ -75,12 +75,10 @@ class ImageUploadApp extends React.Component {
     return (
       <form className={`ImageUploadApp ${draggingClass}`} encType="multipart/form-data">
         <div>
-          <input type="file" name="file" id="js-file-input"/>
+          <input type="file" name="file" id="js-file-input" style={{display:"none"}}/>
           <label className="drop-box" htmlFor="file">
-            <strong>Choose a file</strong>
-            <span> or drag it here</span>.
+            <span>Drag an image here!</span>
           </label>
-          <button type="submit">Upload</button>
         </div>
       </form>
     )
