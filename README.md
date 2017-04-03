@@ -1,4 +1,4 @@
-- `brew install imagemagick` (Requires Homebrew.. you probably already have that. If not, get it here: (https://brew.sh/)
+- `brew install imagemagick` (Requires Homebrew.. you probably already have that. If not, get it here: (https://brew.sh/) )
 
 - `npm install`
 
