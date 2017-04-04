@@ -139,7 +139,7 @@ server.route({
       if (err) throw err;
       //features: { format: 'JPEG', width: 3904, height: 2622, depth: 8 }
 
-      const projId = makeId("sliceTest", 12);
+      const projId = makeId("slice", 12);
 
       let iteratorCount = 1;
       let sliceId = null; //this gets replaced in every iterations
