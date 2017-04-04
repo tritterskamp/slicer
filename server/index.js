@@ -146,9 +146,9 @@ server.route({
 
       function cropSeries(array, finalCallback) {
 
-        console.log('running cropSeries', array)
+        console.log('running cropSeries', array);
         const sliceModel = array[0];
-        sliceId = sliceModel.sliceId
+        sliceId = sliceModel.sliceId;
 
         //Friendlier formats. //TODO: clean this up
         let useFormat = features.format;
@@ -156,7 +156,7 @@ server.route({
         if (useFormat === "PNG") { useFormat = "png" }
 
         //Crop using first member of the array
-        const sliceFileName = `${projId}_proj${iteratorCount}.${useFormat}`; //slice_asdas_0.jpg
+        const sliceFileName = `${projId}_${iteratorCount}.${useFormat}`; //slice_asdas_0.jpg
         const outputPath = `public/output/${sliceFileName}`;
 
         easyimg.rescrop({
