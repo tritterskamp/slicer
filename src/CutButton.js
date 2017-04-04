@@ -6,6 +6,14 @@ import {setAppValue} from './redux-actions/app-actions.js'
 
 class CutButton extends React.Component {
 
+  constructor() {
+    super();
+    //set initial local state
+    this.state = {
+      hasBeenPressed: false
+    }
+  }
+
   handleCutButton() {
     console.log('CUT!!!');
 
@@ -16,6 +24,12 @@ class CutButton extends React.Component {
       console.warn('No access token in `handleCutButton`')
       return;
     }
+
+    //Update state to disable button
+    this.setState({
+      hasBeenPressed: true
+    });
+
 
     let request = new Request('http://localhost:4000/cut', {
       method: 'POST',
@@ -47,6 +61,13 @@ class CutButton extends React.Component {
   }
 
   render() {
+
+    if (this.state.hasBeenPressed) {
+      return (
+        <button disabled={true}>Working...</button>
+      )
+    }
+
     return (
       <button onClick={this.handleCutButton.bind(this)}>
         CUT!

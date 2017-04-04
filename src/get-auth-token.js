@@ -1,6 +1,12 @@
 import store from './init/store.js'
 export function getAuthToken(callback=function(){}) {
 
+
+  if (!store.getState().app.salesforceClientKey || !store.getState().app.salesforceSecretKey) {
+    console.warn('need env setup');
+    return;
+  }
+
   //First check localstorage for a token.
   let localToken = window.localStorage.getItem("savedSalesforceAuthToken");
     //{value: "XXX", localExpirationTimestamp: 234928374 }
