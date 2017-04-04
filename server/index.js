@@ -21,6 +21,27 @@ server.start((err) => {
   console.log(`Server running at: ${server.info.uri}`);
 });
 
+/** Take in a file extension and return a salesforce assetType obj */
+function getAssetTypeConfig(initialFileType) {
+
+  const fileType = initialFileType.toLowerCase();
+
+  //https://developer.salesforce.com/docs/atlas.en-us.mc-apis.meta/mc-apis/base-asset-types.htm
+  const map = {
+    "gif": {"name": "gif", "id": 20},
+    "png": {"name": "png", "id": 28},
+    "jpg": {"name": "jpg", "id": 23},
+    "jpeg": {"name": "jpg", "id": 23},
+  };
+
+  if (!map[fileType]) {
+    console.warn('no fileType match', fileType)
+  }
+
+  return map[fileType] || null;
+}
+
+
 function salesForceMocker(data, callback) {
   callback({
     sliceId: data.sliceId,
@@ -34,6 +55,10 @@ function salesForceMocker(data, callback) {
 function uploadToSalesforce(data, callback) {
   /* data schema: { name, fileBase64, sliceId, accessToken: "asdasdasd"} */
 
+  let viewData = Object.assign({}, data);
+  delete viewData.fileBase64;
+  console.log(viewData)
+
   //Encoding:
   // {"name": "jpg", "id": 23} //ID is tied to the file type
   // {"name": "gif", "id": 20} //ID is tied to the file type
@@ -44,17 +69,13 @@ function uploadToSalesforce(data, callback) {
     console.log('ERROR -> No accessToken defined!')
     return;
   }
-
   const payload = {
     name: data.name,
     file: data.fileBase64,
-    assetType: {
-      "name": "jpg",
-      "id": 23
-    },
+    assetType: getAssetTypeConfig(data.fileType),
   };
 
-  console.log(payload)
+  // console.log(payload)
 
   console.log('POSTing to Salesforce!');
   request.post(`http://www.exacttargetapis.com/asset/v1/content/assets?access_token=${accessToken}`, {
@@ -67,12 +88,12 @@ function uploadToSalesforce(data, callback) {
         return;
       }
 
-      console.log('res', response)
+      // console.log('res', response)
 
       if (!error && response.statusCode === 201) {
 
         console.log('UPLOAD SUCCESS');
-        console.log(body);
+        //console.log(body);
         const uploadedProperties = body.fileProperties; //from API response
         if (callback) {
           callback({ //Same as what the mockup does
@@ -129,9 +150,10 @@ server.route({
         const sliceModel = array[0];
         sliceId = sliceModel.sliceId
 
-        //Friendlier formats
+        //Friendlier formats. //TODO: clean this up
         let useFormat = features.format;
         if (useFormat === "JPEG") { useFormat = "jpg" }
+        if (useFormat === "PNG") { useFormat = "png" }
 
         //Crop using first member of the array
         const sliceFileName = `${projId}_proj${iteratorCount}.${useFormat}`; //slice_asdas_0.jpg
@@ -157,10 +179,10 @@ server.route({
           const outputtedSliceName = data.name;
           const outputtedSlicePath = data.path;
 
-
           //mocking salesforce for now
           //salesForceMocker({ //swappable line
           uploadToSalesforce({
+            fileType: data.type,
             name: outputtedSliceName,
             fileBase64: getBase64(outputtedSlicePath),
             sliceId: sliceId,
@@ -254,7 +276,7 @@ server.route({
     const fileOptions = { dest: `public/chopping-block/` };
 
     uploader(file, fileOptions).then(fileDetails => {
-      console.log('FD', fileDetails)
+      // console.log('FD', fileDetails)
       reply({
         data: fileDetails
       })
