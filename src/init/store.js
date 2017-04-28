@@ -19,7 +19,7 @@ const store = createStore({
       "initial": {
         y: 0, //CANNOT DELETE THIS ONE
         hasLink: true,
-        linkText: "",
+        linkHref: "",
         altText: "",
       }
     },

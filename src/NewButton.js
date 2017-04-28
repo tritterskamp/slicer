@@ -16,7 +16,7 @@ class NewButton extends React.Component {
                 "initial": {
                     y: 0, //CANNOT DELETE THIS ONE
                     hasLink: true,
-                    linkText: "",
+                    linkHref: "",
                     altText: "",
                 }
             }

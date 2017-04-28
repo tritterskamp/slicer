@@ -10,9 +10,9 @@ class SliceTextboxes extends React.Component {
     })
   }
 
-  handleLinkTextChange() {
+  handlelinkHrefChange() {
     setSliceValue(this.props.id, {
-      linkText: this.refs.linkTextInput.value
+      linkHref: this.refs.linkHrefInput.value
     })
   }
 
@@ -23,13 +23,13 @@ class SliceTextboxes extends React.Component {
   }
 
 
-  renderLinkTextbox() {
+  renderlinkHrefbox() {
     if (this.props.hasLink) {
       return (
         <div>
           <label className="SliceTextboxes-label">Link</label>
-          <input ref="linkTextInput" value={this.props.linkText}
-                 onChange={this.handleLinkTextChange.bind(this)}
+          <input ref="linkHrefInput" value={this.props.linkHref}
+                 onChange={this.handlelinkHrefChange.bind(this)}
                  className="SliceTextboxes-textinput"/>
         </div>
       )
@@ -64,7 +64,7 @@ class SliceTextboxes extends React.Component {
           <label htmlFor={linkOffLabelFor} className="SliceTextboxes-label inline">No</label>
         </div>
 
-        {this.renderLinkTextbox()}
+        {this.renderlinkHrefbox()}
 
         <div>
           <label className="SliceTextboxes-label">Alt Text</label>

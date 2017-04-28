@@ -46,7 +46,7 @@ class Slice extends React.Component {
           <SliceTextboxes
             id={this.props.id}
             hasLink={model.hasLink || false}
-            linkText={model.linkText || ""}
+            linkHref={model.linkHref || ""}
             altText={model.altText || ""}
           />
 

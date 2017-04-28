@@ -11,11 +11,15 @@ export function getMarkupOutput(resultFromServer) {
 
     const model = slices[result.sliceId];
 
+    if (model.linkHref.match(/\.aspx$/i)) {
+      model.linkHref = model.linkHref + "?var=ccmp";
+    }
+
     if (model.hasLink) {
       return getTableMarkupWithLink(
         result.publishedUrl,
         model.altText,
-        model.linkText
+        model.linkHref
       )
     }
     //default to no link
@@ -30,10 +34,10 @@ export function getMarkupOutput(resultFromServer) {
 }
 
 /////////////////////
-function getTableMarkupWithLink(imgPath, altText, linkText) {
+function getTableMarkupWithLink(imgPath, altText, linkHref) {
  return (
    `<table style="border-collapse:collapse;" width="100%"><tr><td style="padding:0;" width="100%">
-    <a href="${linkText}" target="_blank" style="text-decoration:none;">
+    <a href="${linkHref}" target="_blank" style="text-decoration:none;">
         <img src="${imgPath}" alt="${altText}" style="display:block;" border="0">
     </a></td></tr></table>`
  )
