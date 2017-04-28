@@ -73,14 +73,19 @@ class ImageUploadApp extends React.Component {
   render() {
     const draggingClass = this.state.isDraggingOver ? "is-dragging-over" : "";
     return (
-      <form className={`ImageUploadApp ${draggingClass}`} encType="multipart/form-data">
-        <div>
-          <input type="file" name="file" id="js-file-input" style={{display:"none"}}/>
-          <label className="drop-box" htmlFor="file">
-            <span>Drag an image here!</span>
-          </label>
+      <div>
+        <div className="App-header">
+          <h1>Slicer</h1>
         </div>
-      </form>
+        <form className={`ImageUploadApp ${draggingClass}`} encType="multipart/form-data">
+          <div>
+            <input type="file" name="file" id="js-file-input" style={{display:"none"}}/>
+            <label className="drop-box" htmlFor="file">
+              <span>Drag an image here!</span>
+            </label>
+          </div>
+        </form>
+      </div>
     )
   }
 }

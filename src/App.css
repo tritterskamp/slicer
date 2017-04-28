@@ -2,6 +2,25 @@ body {
   background:#fafafa;
 }
 
+.App-header {
+  background-color:#fff;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px;
+  margin:0 auto 1em;
+  border-bottom:1px solid #dedede;
+}
+.App-header h1 {
+  margin:0;
+}
+.App-header button {
+  padding:5px 15px;
+  margin:0 10px;
+  background:#fff;
+  border:1px solid #dedede;
+}
+
 .Slices-container {
   position:relative;
 }
@@ -18,7 +37,6 @@ body {
 .CutBand:hover {
   cursor:crosshair;
 }
-
 
 .SliceTextboxes-label {
   font-size: 0.7em;
