@@ -9,7 +9,7 @@ export function getMarkupOutput(resultFromServer) {
 
   return resultFromServer.map(result => {
 
-    const model = slices[result.sliceId];
+    let model = slices[result.sliceId];
 
     if (model.linkHref.match(/\.aspx$/i)) {
       model.linkHref = model.linkHref + "?var=ccmp";
