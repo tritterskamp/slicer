@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 
 import CutBand from './CutBand'
 import CutButton from './CutButton'
+import NewButton from './NewButton'
 import OutputTextArea from './OutputTextArea'
 import Slices from './Slices'
 import ImageCanvas from './ImageCanvas'
@@ -19,8 +20,9 @@ class SliceApp extends React.Component {
       <div className="App">
         <div className="App-header">
           <CutButton />
-          <OutputTextArea />
+          <NewButton />
         </div>
+          <OutputTextArea />
 
         <div className="Slices-container" style={slicesContainerStyle}>
           <CutBand />
