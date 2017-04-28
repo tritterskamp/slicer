@@ -19,8 +19,11 @@ class SliceApp extends React.Component {
     return (
       <div className="App">
         <div className="App-header">
-          <CutButton />
-          <NewButton />
+          <h1>Slicer</h1>
+          <div className="button-container">
+            <CutButton />
+            <NewButton />
+          </div>
         </div>
           <OutputTextArea />
 
